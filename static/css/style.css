@@ -1,10 +1,16 @@
 /* Base styles */
 body {
   font-family: "Montserrat", sans-serif;
-  background-color: #121212;
+  background-color: #181a20;
   margin: 0;
   padding: 0;
   color: #e0e0e0;
+}
+
+.header-text {
+  font-size: 4rem;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 /* Main container layout */
@@ -30,220 +36,14 @@ body {
 }
 
 .token-item {
-  background-color: #1e1e1e;
+  background-color: #1e2329;
   border-radius: 10px;
   padding: 15px;
-  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.token-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
-}
-
-/* Token header layout */
-.token-header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 10px;
-}
-
-/* Token image (25%) and info (75%) */
-.token-image {
-  flex: 0 0 12%;
-  display: flex;
-  justify-content: start;
-}
-
-.token-logo {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
-
-.token-info {
-  flex: 1;
-  padding-left: 10px;
-}
-
-/* Token details */
-.token-name {
-  font-size: 16px;
-  font-weight: bold;
-  color: #ffffff;
-}
-
-.token-symbol {
-  font-size: 28px;
-  color: #4caf50;
-}
-
-.token-full-name {
-  font-size: 12px;
-  color: #b0b0b0;
-}
-
-.token-address {
-  font-size: 12px;
-  color: #888;
-}
-
-.copy-icon {
-  cursor: pointer;
-  margin-left: 5px;
-  color: #888;
-  transition: color 0.3s ease;
-}
-
-.copy-icon:hover {
-  color: #4caf50;
-}
-
-/* Social links */
-.social-links {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-.social-icon {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: #333;
-  color: #e0e0e0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.social-icon:hover,
-.social-icon.active {
-  background-color: #4caf50;
-  color: #121212;
-}
-
-/* Right container styles */
-.trending-container {
-  background-color: #1e1e1e;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
-}
-
-.trending-container h2 {
-  margin-top: 0;
-  color: #4caf50;
-  text-align: center;
-}
-
-#recentSearchesList {
-  list-style-type: none;
-  padding: 0;
-}
-
-#recentSearchesList li {
+  flex-direction: column;
   margin-bottom: 10px;
-  padding: 10px;
-  background-color: #2a2a2a;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
+  border: 1px solid #a3a29c5e;
 }
-
-#recentSearchesList li:hover {
-  background-color: #333;
-}
-
-/* Search container styles */
-.search-container {
-  max-width: 500px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  background-color: #1e1e1e;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
-}
-
-.search-box {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.search-bar,
-.search-button {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  border: 2px solid #444;
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-
-.search-bar {
-  background-color: #2a2a2a;
-  color: #e0e0e0;
-  transition: border-color 0.3s ease;
-}
-
-.search-bar:focus {
-  outline: none;
-  border-color: #4caf50;
-}
-
-.search-button {
-  background-color: #4caf50;
-  color: #121212;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-.search-button:hover {
-  background-color: #45a049;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .main-container {
-    flex-direction: column;
-  }
-
-  .left-container,
-  .right-container {
-    width: 100%;
-  }
-
-  .left-container {
-    margin-bottom: 20px;
-  }
-
-  .container-wrapper {
-    grid-template-columns: 1fr;
-  }
-
-  .search-container {
-    margin: 1rem auto;
-  }
-}
-
-.token-item {
-  background-color: #1e1e1e;
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  display: flex;
-  flex-direction: column;
-}
-
 .token-item:hover {
   transform: translateY(-5px);
   box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
@@ -337,47 +137,12 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.social-icon:hover,
 .social-icon.active {
   background-color: #4caf50;
   color: #121212;
 }
 
-/* Buy Now button */
-.buy-now-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #4caf50;
-  color: #121212;
-  border: none;
-  border-radius: 5px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.buy-now-button:hover {
-  background-color: #45a049;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .token-item {
-    flex-direction: column;
-  }
-
-  .token-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .token-name-symbol,
-  .token-address-social {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
+/* Token footer */
 .token-footer {
   display: flex;
   justify-content: space-between;
@@ -396,6 +161,7 @@ body {
   padding: 10px;
   border-radius: 5px;
 }
+
 .mc-label {
   font-weight: bold;
   color: #e0e0e0;
@@ -410,7 +176,7 @@ body {
 .buy-now-button {
   flex: 0 0 75%;
   padding: 10.5px 20px;
-  background-color: #007bff;
+  background-color: #cfaf30e3;
   color: #121212;
   font-size: 16px;
   border: none;
@@ -420,9 +186,93 @@ body {
 }
 
 .buy-now-button:hover {
-  background-color: #0056b3;
+  background-color: #cfaf30;
 }
 
+/* Right container styles */
+.trending-container {
+  background-color: #1e2329;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+}
+
+.trending-container h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #4caf50;
+  text-align: center;
+}
+
+#recentSearchesList {
+  list-style-type: none;
+  padding: 0;
+}
+
+#recentSearchesList li {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #2a2a2a;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+#recentSearchesList li:hover {
+  background-color: #333;
+}
+
+/* Search container styles */
+.search-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: #1e2329;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+}
+
+.search-box {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.search-bar,
+.search-button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #444;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.search-bar {
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+  transition: border-color 0.3s ease;
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: #4caf50;
+}
+
+.search-button {
+  background-color: #f0b90b;
+  color: #121212;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.search-button:hover {
+  background-color: #45a049;
+}
+
+/* Confetti and overlay styles */
 #confettiWrapper {
   width: 100%;
   height: 100%;
@@ -436,11 +286,10 @@ body {
 .overlay {
   display: none;
   position: fixed;
-  z-index: 1000;
+  z-index: 9999;
   left: 0;
   top: 0;
   width: 100%;
-  z-index: 9999;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.85);
   justify-content: center;
@@ -466,10 +315,6 @@ body {
   animation: spin 2s linear infinite;
 }
 
-.pumplogo {
-  height: 20px;
-  width: 20px;
-}
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -485,6 +330,7 @@ body {
   color: #fff;
 }
 
+/* Toast notification */
 .toast {
   visibility: hidden;
   min-width: 300px;
@@ -499,7 +345,6 @@ body {
   left: 50%;
   bottom: 50px;
   font-size: 16px;
-  font-family: "Arial", sans-serif;
   opacity: 0;
   box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.3);
   transition: opacity 0.5s ease, visibility 0.5s ease, transform 0.5s ease;
@@ -518,19 +363,23 @@ body {
   transform: translateY(20px);
 }
 
+/* Get Trending button */
 #getTrending {
   width: 100%;
   max-width: 300px;
-  padding: 15px 20px;
+  padding: 10px;
   font-size: 18px;
   color: #fff;
   background: linear-gradient(45deg, #ff4e50, #f9d423);
-  border-radius: 10px; /* Less radius */
+  border-radius: 10px;
+  border: none;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 }
+
+/* Logo container */
 .logo-container {
   position: relative;
   display: inline-block;
@@ -538,4 +387,44 @@ body {
 
 .logo-container:hover .token-logo-popup {
   opacity: 0.8;
+}
+
+.pumplogo {
+  height: 20px;
+  width: 20px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  .left-container,
+  .right-container {
+    width: 100%;
+  }
+
+  .left-container {
+    margin-bottom: 20px;
+  }
+
+  .container-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .search-container {
+    margin: 1rem auto;
+  }
+
+  .token-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .token-name-symbol,
+  .token-address-social {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

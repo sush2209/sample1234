@@ -118,6 +118,7 @@ function hideOverlay() {
 
 function showPaidOverlay() {
   showOverlay("paidOverlay");
+  launchConfetti();
 }
 
 function shareToX(contractAddress) {
@@ -133,7 +134,7 @@ function shareToX(contractAddress) {
 // Check paid status function
 function checkPaidStatus(address, checkEligibility = false) {
   const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
-  console.log("CSRF Token:", csrftoken);
+
   return fetch("/check-paid-status", {
     method: "POST",
     headers: {
@@ -198,9 +199,9 @@ function fetchPricingTiers() {
       if (data.tiers && data.tiers.length > 0) {
         data.tiers.forEach((tier) => {
           const radioButton = `
-            <div>
-              <input type="radio" id="tier${tier.id}" name="pricingTier" value="${tier.id}" data-price="${tier.current_price}">
-              <label for="tier${tier.id}">${tier.duration} hour(s) - ${tier.current_price} SOL</label>
+            <div style="display:flex">
+              <input type="radio" id="tier${tier.id}" name="pricingTier" value="${tier.id}" data-price="${tier.current_price}" style="flex-shrink:0">
+              <label for="tier${tier.id}" style="flex-grow:1">${tier.duration} hour(s) - ${tier.current_price} SOL</label>
             </div>
           `;
           radioContainer.innerHTML += radioButton;
@@ -249,7 +250,23 @@ document.addEventListener("DOMContentLoaded", () => {
         recentSearchesList.innerHTML = "";
         data.searches.forEach((search) => {
           const li = document.createElement("li");
-          li.textContent = search;
+
+          const a = document.createElement("a");
+          a.href = `https://pump.fun/${encodeURIComponent(search)}`;
+          a.textContent = search;
+          a.target = "_blank";
+          a.style.textDecoration = "none";
+          a.style.color = "#cccccc";
+          a.style.fontWeight = "500"
+          a.onmouseover = function () {
+            a.style.color = "#b3b3b3";
+          };
+          a.onmouseout = function () {
+            a.style.color = "#cccccc";
+          };
+
+          li.appendChild(a);
+          li.style.cursor = "pointer"; 
           recentSearchesList.appendChild(li);
         });
       })
@@ -334,10 +351,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initialize Helius checkout widget
     window.helioCheckout(helioCheckoutContainer, {
-      paylinkId: "66f4f4786db85ad9a70749d5", // Replace with your actual paylinkId
+      paylinkId: "66f453a41e8e50f5bc54dfb9", // Replace with your actual paylinkId
       theme: { themeMode: "light" },
       amount: amount,
-      network: "test",
     });
 
     // Listen for the payment completion event

@@ -93,7 +93,7 @@ def start_scheduler():
     scheduler.add_job(scheduled_task, 'interval', minutes=5)
 
     # Schedule the second task every 4 minutes
-    scheduler.add_job(generate_active_payment_data, 'interval', minutes=2)
+    scheduler.add_job(generate_active_payment_data, 'interval', minutes=1)
 
     scheduler.start()
     print("Scheduler started. Task 1 runs every 5 minutes and Task 2 runs every 4 minutes.")
