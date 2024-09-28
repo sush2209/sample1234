@@ -1,0 +1,212 @@
+#paidOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.9); /* Darker background for more contrast */
+  z-index: 9999;
+}
+
+#tokenInfoContent {
+  width: 90%;
+  min-width: 800px;
+  max-width: 850px;
+  padding: 40px;
+  background-color: #121212; /* Darker background for a cleaner look */
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7); /* Stronger shadow for depth */
+  position: relative;
+}
+
+#popupHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #333;
+}
+
+#popupTitle {
+  font-size: 36px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -1px;
+}
+
+#socialIcons {
+  display: flex;
+  gap: 15px;
+}
+
+#socialIcons img {
+  width: 32px;
+  height: 32px;
+  transition: transform 0.3s ease;
+  filter: invert(1);
+}
+
+#socialIcons img:hover {
+  transform: scale(1.1);
+}
+
+/* Replaced Twitter with X */
+#socialIcons .x-icon {
+  content: url('path-to-x-logo.png'); /* Replace with X logo URL */
+}
+
+#mainContent {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.one {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: inline-block;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.one::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(29, 28, 28, 0.5);
+  z-index: 2;
+}
+
+.one img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+  transition: opacity 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.5); /* Added box shadow for image */
+  position: relative;
+  z-index: 1;
+}
+
+.one:hover img {
+  opacity: 0.9;
+  box-shadow: 0 0 20px 8px rgba(0, 0, 0, 0.6); /* Hover effect with stronger shadow */
+}
+
+.paid-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #1cf3b2; /* More vivid green for visibility */
+  font-weight: 900;
+  font-size: 52px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  letter-spacing: 2px;
+  pointer-events: none;
+  text-transform: uppercase;
+  z-index: 3;
+  white-space: nowrap;
+}
+
+.two {
+  flex: 1;
+}
+
+.two h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.two h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #4caf50;
+  margin-bottom: 15px;
+}
+
+.two p {
+  font-size: 16px;
+  color: #cccccc;
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+#buttonGroup {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+
+.share-button {
+  background-color: #4caf50;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.share-button:hover {
+  background-color: #45a049;
+  box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+}
+
+.share-button img {
+  width: 20px;
+  height: 20px;
+  filter: invert(1);
+}
+
+#closePaidOverlayBtn {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+#closePaidOverlayBtn:hover {
+  background-color: #444444;
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+  #tokenInfoContent {
+    width: 100%;
+    padding: 20px;
+  }
+
+  #mainContent {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .one {
+    width: 150px;
+    height: 150px;
+  }
+
+  .two h1 {
+    font-size: 28px;
+  }
+
+  .two h2 {
+    font-size: 24px;
+  }
+}

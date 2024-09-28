@@ -1,0 +1,313 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Check - Eligibility and Status</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <style>
+        body {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .space-y-4>*+* {
+            margin-top: 1rem;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        /* New styles for recent searches */
+        #recentSearches {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #recentSearchesList {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        #recentSearchesList li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Trending Check</h1>
+    <!-- Status Check Section -->
+    <div id="statusCheck" class="space-y-4">
+        <h2>Check Payment Status</h2>
+        <input type="text" id="statusAddress" placeholder="Enter contract address">
+        <button id="checkStatusBtn">Check Status</button>
+        <div id="statusResult"></div>
+    </div>
+
+    <!-- Open Eligibility Check Form Button -->
+    <button id="openEligibilityFormBtn" class="space-y-4">Open Eligibility Check Form</button>
+
+    <!-- Recent Searches Section -->
+    <div id="recentSearches">
+        <h2>Recent Searches</h2>
+        <ul id="recentSearchesList"></ul>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="overlay"></div>
+
+    <!-- Popup for Eligibility Check Form -->
+    <div id="eligibilityPopup" class="popup">
+        <h2>Eligibility Check Form</h2>
+        <form id="eligibilityForm">
+            {% csrf_token %}
+            <div id="addressInput">
+                <input type="text" id="address" name="address" placeholder="Enter contract address" required>
+                <button type="button" id="checkEligibilityBtn">Check Eligibility</button>
+            </div>
+
+            <div id="eligibilityMessage"></div>
+
+            <!-- Radio button container -->
+            <div id="paymentOptions" style="display:none;">
+                <h3>Select Payment Option</h3>
+                <div id="radioContainer"></div> <!-- Radio buttons will be dynamically injected here -->
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" id="submitBtn" style="display:none;">Submit</button>
+        </form>
+
+        <button id="closePopupBtn" class="space-y-4">Close</button>
+    </div>
+    <div class="active-addresses">
+        <h2>Active Addresses</h2>
+        {% if active_addresses %}
+        <ul>
+            {% for record in active_addresses %}
+            <li>{{ record.contract_address }} - Duration: {{ record.duration }} hours</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No active addresses at the moment.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const overlay = document.getElementById('overlay');
+            const eligibilityPopup = document.getElementById('eligibilityPopup');
+            const openEligibilityFormBtn = document.getElementById('openEligibilityFormBtn');
+            const closePopupBtn = document.getElementById('closePopupBtn');
+            const checkStatusBtn = document.getElementById('checkStatusBtn');
+            const checkEligibilityBtn = document.getElementById('checkEligibilityBtn');
+            const addressInput = document.getElementById('address');
+            const eligibilityMessage = document.getElementById('eligibilityMessage');
+            const statusResult = document.getElementById('statusResult');
+            const paymentOptions = document.getElementById('paymentOptions');
+            const radioContainer = document.getElementById('radioContainer');
+            const submitBtn = document.getElementById('submitBtn');
+            const eligibilityForm = document.getElementById('eligibilityForm');
+            const recentSearchesList = document.getElementById('recentSearchesList');
+
+            // Fetch and display recent searches
+            function fetchRecentSearches() {
+                fetch('/recent-searches')
+                    .then(response => response.json())
+                    .then(data => {
+                        recentSearchesList.innerHTML = '';
+                        data.searches.forEach(search => {
+                            const li = document.createElement('li');
+                            li.textContent = search;
+                            recentSearchesList.appendChild(li);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching recent searches:', error);
+                    });
+            }
+
+            // Call fetchRecentSearches when the page loads
+            fetchRecentSearches();
+
+            // Check status (separate input)
+            checkStatusBtn.addEventListener('click', () => {
+                const statusAddress = document.getElementById('statusAddress').value;
+                if (!statusAddress) {
+                    alert('Please enter a contract address to check status.');
+                    return;
+                }
+
+                checkPaidStatus(statusAddress);
+            });
+
+            // Open eligibility check form popup
+            openEligibilityFormBtn.addEventListener('click', () => {
+                overlay.style.display = 'block';
+                eligibilityPopup.style.display = 'block';
+            });
+
+            // Close eligibility check form popup
+            closePopupBtn.addEventListener('click', () => {
+                overlay.style.display = 'none';
+                eligibilityPopup.style.display = 'none';
+                // Reset form
+                addressInput.disabled = false;
+                eligibilityMessage.textContent = '';
+                paymentOptions.style.display = 'none';
+                radioContainer.innerHTML = '';
+                submitBtn.style.display = 'none';
+            });
+
+            // Check eligibility
+            checkEligibilityBtn.addEventListener('click', () => {
+                const address = addressInput.value;
+                if (!address) {
+                    alert('Please enter a contract address to check eligibility.');
+                    return;
+                }
+
+                checkPaidStatus(address, true);
+            });
+
+            function checkPaidStatus(address, checkEligibility = false) {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                fetch('/check-paid-status', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: `address=${encodeURIComponent(address)}`
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (checkEligibility) {
+                            if (data.paid) {
+                                eligibilityMessage.textContent = 'You are eligible to proceed.';
+                                addressInput.disabled = true;
+                                fetchPricingTiers();
+                            } else {
+                                eligibilityMessage.textContent = 'You are not eligible to proceed.';
+                            }
+                        } else {
+                            statusResult.textContent = data.paid ? 'Address is paid.' : 'Address is not paid.';
+                        }
+                        // Refresh recent searches after each check
+                    })
+                    .catch(error => {
+                        console.error('Status check error:', error);
+                        alert('An error occurred while checking the status. Please try again.');
+                    });
+            }
+
+            function fetchPricingTiers() {
+                fetch('/check-pricing-tier')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!radioContainer) {
+                            console.error('radioContainer element not found');
+                            return;
+                        }
+
+                        radioContainer.innerHTML = '';
+
+                        if (data.tiers && data.tiers.length > 0) {
+                            data.tiers.forEach(tier => {
+                                const radioButton = `
+                            <div>
+                                <input type="radio" id="tier${tier.id}" name="pricingTier" value="${tier.id}">
+                                <label for="tier${tier.id}">${tier.duration} hour(s) - ${tier.current_price} SOL</label>
+                            </div>
+                        `;
+                                radioContainer.innerHTML += radioButton;
+                            });
+
+                            paymentOptions.style.display = 'block';
+                            submitBtn.style.display = 'block';
+                        } else {
+                            radioContainer.innerHTML = '<p>No pricing tiers available.</p>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching pricing tiers:', error);
+                        alert('An error occurred while fetching pricing tiers. Please try again.');
+                    });
+            }
+
+            // Handle form submission
+            eligibilityForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const contractAddress = addressInput.value;
+                const selectedOption = document.querySelector('input[name="pricingTier"]:checked');
+
+                if (!contractAddress || !selectedOption) {
+                    alert('Please enter a contract address and select a pricing tier.');
+                    return;
+                }
+
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                fetch('/confirmation', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: `address=${encodeURIComponent(contractAddress)}&option=${encodeURIComponent(selectedOption.value)}`
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        alert('Payment record saved successfully!');
+                        closePopupBtn.click();
+                        // Refresh recent searches after successful submission
+                        fetchRecentSearches();
+                    })
+                    .catch(error => {
+                        console.error('Submission error:', error);
+                        alert('An error occurred while processing your request. Please try again.');
+                    });
+            });
+        });
+    </script>
+</body>
+
+</html>

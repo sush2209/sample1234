@@ -1,0 +1,553 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Check - Eligibility and Status</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Styles -->
+    <!-- <style>
+        
+        body {
+            padding: 20px;
+            background-color: #1d1d2c;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+        }
+
+        .space-y-4>*+* {
+            margin-top: 1rem;
+        }
+
+        .highlight-text,
+        .header-text {
+            font-weight: bold;
+            text-align: center;
+            color: #00ffbf;
+        }
+
+        .cta-link {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .cta-link:hover {
+            text-decoration: underline;
+        }
+
+        .popup,
+        .overlay {
+            display: none;
+        }
+
+        .popup {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .trending-container {
+            background-color: #1E1E2A;
+            border: 2px solid #00FFCC;
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .trending-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            padding: 10px 0;
+        }
+
+        .item-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .progress-bar {
+            height: 5px;
+            width: 100px;
+            background-color: #00FFCC;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .buy-btn {
+            background-color: #00FFCC;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 8px;
+            color: #121212;
+            cursor: pointer;
+        }
+
+        .item-rank,
+        .item-mc {
+            font-size: 12px;
+            color: #CCCCCC;
+        }
+
+        .search-bar,
+        .search-button {
+            margin-top: 1rem;
+            border-radius: 10px;
+        }
+
+        .search-bar {
+            background-color: #111;
+            color: white;
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #444;
+        }
+
+        .search-button {
+            background-color: #00c9a7;
+            color: white;
+            padding: 10px 20px;
+            font-weight: bold;
+        }
+
+        .container-wrapper {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .container-wrapper > div {
+            width: 48%;
+        }
+    </style> -->
+    <style>
+        .token-item {
+            /* background-color: #2a2a2a; */
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .token-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .token-symbol {
+            color: #00ff00;
+        }
+
+        .token-address {
+            font-size: 0.9em;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #444;
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .social-icon.active {
+            background-color: #00ff00;
+            color: #000;
+        }
+
+        .copy-icon {
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .token-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .search-container {
+            max-width: 500px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background-color: #f8f8f8;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-box {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .search-bar,
+        .search-button {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .search-bar {
+            background-color: white;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .search-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Main Container -->
+    <div class="container text-center">
+        <!-- <div class="highlight-text">
+            <i class="bi bi-fire" style="color: #ff4500; font-size: 2rem;"></i>
+            <h2 style="display: inline;">TRY DEXSOCIAL SOL TRENDING</h2>
+            <i class="bi bi-fire" style="color: #ff4500; font-size: 2rem;"></i>
+        </div> -->
+        <!-- CheckDex Section -->
+        <div class="header-text mt-3" style="font-size: 4rem;">DEXSOCIAL.XYZ</div>
+        <div class="search-count mt-3 mb-5" style="font-size: 1.5rem;">SEARCHES SO FAR: 9,753,559 <i
+                class="bi bi-rocket"></i></div>
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" class="search-bar" id="statusAddress"
+                    placeholder="Solana, Tron, Eth, Base, Polygon, BSC, or Blast address">
+                <button class="search-button" id="checkStatusBtn">CHECK DEX Screener PAID</button>
+            </div>
+        </div>
+        <div id="statusResult"></div>
+    </div>
+
+    <div class="container-wrapper">
+        {% for item in trending_data %}
+        <div class="token-item">
+            <!-- Display token image, with a fallback in case the image is not available -->
+            <div class="token-image">
+                <img src="{{ item.image_uri|default:'path/to/placeholder-image.jpg' }}" alt="{{ item.name }}"
+                    class="token-logo" />
+            </div>
+
+            <div class="token-name">
+                <span class="token-symbol">${{ item.symbol }}</span> {{ item.name }}
+            </div>
+
+            <!-- Display truncated and uppercase contract address (first 4 and last 4 chars) -->
+            <div class="token-address">
+                {{ item.mint|slice:":4"|upper }}...{{ item.mint|slice:"-4:"|upper }}
+                <span class="copy-icon" onclick="copyToClipboard('{{ item.mint }}')">
+                    <i class="fas fa-clipboard"></i>
+                </span>
+            </div>
+
+            <!-- Display the market cap -->
+            <div class="market-cap">
+                Market Cap: {{ item.market_cap }}
+            </div>
+
+            <!-- Social links -->
+            <div class="social-links">
+                <a href="{{ item.telegram }}" class="social-icon {% if item.telegram %}active{% endif %}"
+                    target="_blank">
+                    <i class="fab fa-telegram-plane"></i>
+                </a>
+                <a href="{{ item.twitter }}" class="social-icon {% if item.twitter %}active{% endif %}" target="_blank">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="{{ item.website }}" class="social-icon {% if item.website %}active{% endif %}" target="_blank">
+                    <i class="fas fa-globe"></i>
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <p>No token data available at the moment.</p>
+        {% endfor %}
+    </div>
+    <div class="trending-container">
+        <h2>Recent Searches</h2>
+        <ul id="recentSearchesList"></ul>
+    </div>
+    </div>
+    </div>
+    
+    <!-- <button id="openEligibilityFormBtn" class="space-y-4">Open Eligibility Check Form</button> -->
+    <!-- Eligibility Popup -->
+    <div id="overlay" class="overlay"></div>
+    <!-- <div id="eligibilityPopup" class="popup">
+        <h2>Eligibility Check Form</h2>
+        <form id="eligibilityForm">
+            {% csrf_token %}
+            <input type="text" id="address" name="address" placeholder="Enter contract address" required>
+            <button type="button" id="checkEligibilityBtn">Check Eligibility</button>
+            <div id="eligibilityMessage"></div>
+
+            <!-- Payment Options -->
+    <div id="paymentOptions" class="mt-3">
+        <h3>Payment Options</h3>
+        <p>Click here to connect to your wallet and pay 0.001 ETH</p>
+        <a href="#">Connect Wallet</a>
+        <div class="mt-3">
+            <button type="button" id="dismissPopupBtn">Close</button>
+        </div>
+    </div>
+    </form>
+    </div> -->
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function () {
+                alert('Address copied to clipboard!');
+            }, function (err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+            const overlay = document.getElementById('overlay');
+            const eligibilityPopup = document.getElementById('eligibilityPopup');
+            const openEligibilityFormBtn = document.getElementById('openEligibilityFormBtn');
+            const closePopupBtn = document.getElementById('closePopupBtn');
+            const checkStatusBtn = document.getElementById('checkStatusBtn');
+            const checkEligibilityBtn = document.getElementById('checkEligibilityBtn');
+            const addressInput = document.getElementById('address');
+            const eligibilityMessage = document.getElementById('eligibilityMessage');
+            const statusResult = document.getElementById('statusResult');
+            const paymentOptions = document.getElementById('paymentOptions');
+            const radioContainer = document.getElementById('radioContainer');
+            const submitBtn = document.getElementById('submitBtn');
+            const eligibilityForm = document.getElementById('eligibilityForm');
+            const recentSearchesList = document.getElementById('recentSearchesList');
+
+            // Fetch and display recent searches
+            function fetchRecentSearches() {
+                fetch('/recent-searches')
+                    .then(response => response.json())
+                    .then(data => {
+                        recentSearchesList.innerHTML = '';
+                        data.searches.forEach(search => {
+                            const li = document.createElement('li');
+                            li.textContent = search;
+                            recentSearchesList.appendChild(li);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching recent searches:', error);
+                    });
+            }
+
+            // Call fetchRecentSearches when the page loads
+            fetchRecentSearches();
+
+            // Check status (separate input)
+            checkStatusBtn.addEventListener('click', () => {
+                const statusAddress = document.getElementById('statusAddress').value;
+                if (!statusAddress) {
+                    alert('Please enter a contract address to check status.');
+                    return;
+                }
+
+                checkPaidStatus(statusAddress);
+            });
+
+            // Open eligibility check form popup
+            openEligibilityFormBtn.addEventListener('click', () => {
+                overlay.style.display = 'block';
+                eligibilityPopup.style.display = 'block';
+            });
+
+            // Close eligibility check form popup
+            closePopupBtn.addEventListener('click', () => {
+                overlay.style.display = 'none';
+                eligibilityPopup.style.display = 'none';
+                // Reset form
+                addressInput.disabled = false;
+                eligibilityMessage.textContent = '';
+                paymentOptions.style.display = 'none';
+                radioContainer.innerHTML = '';
+                submitBtn.style.display = 'none';
+            });
+
+            // Check eligibility
+            checkEligibilityBtn.addEventListener('click', () => {
+                const address = addressInput.value;
+                if (!address) {
+                    alert('Please enter a contract address to check eligibility.');
+                    return;
+                }
+
+                checkPaidStatus(address, true);
+            });
+
+            function checkPaidStatus(address, checkEligibility = false) {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                fetch('/check-paid-status', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: `address=${encodeURIComponent(address)}`
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (checkEligibility) {
+                            if (data.paid) {
+                                eligibilityMessage.textContent = 'You are eligible to proceed.';
+                                addressInput.disabled = true;
+                                fetchPricingTiers();
+                            } else {
+                                eligibilityMessage.textContent = 'You are not eligible to proceed.';
+                            }
+                        } else {
+                            statusResult.textContent = data.paid ? 'Address is paid.' : 'Address is not paid.';
+                        }
+                        // Refresh recent searches after each check
+                    })
+                    .catch(error => {
+                        console.error('Status check error:', error);
+                        alert('An error occurred while checking the status. Please try again.');
+                    });
+            }
+
+            function fetchPricingTiers() {
+                fetch('/check-pricing-tier')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!radioContainer) {
+                            console.error('radioContainer element not found');
+                            return;
+                        }
+
+                        radioContainer.innerHTML = '';
+
+                        if (data.tiers && data.tiers.length > 0) {
+                            data.tiers.forEach(tier => {
+                                const radioButton = `
+                            <div>
+                                <input type="radio" id="tier${tier.id}" name="pricingTier" value="${tier.id}">
+                                <label for="tier${tier.id}">${tier.duration} hour(s) - ${tier.current_price} SOL</label>
+                            </div>
+                        `;
+                                radioContainer.innerHTML += radioButton;
+                            });
+
+                            paymentOptions.style.display = 'block';
+                            submitBtn.style.display = 'block';
+                        } else {
+                            radioContainer.innerHTML = '<p>No pricing tiers available.</p>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching pricing tiers:', error);
+                        alert('An error occurred while fetching pricing tiers. Please try again.');
+                    });
+            }
+
+            // Handle form submission
+            eligibilityForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const contractAddress = addressInput.value;
+                const selectedOption = document.querySelector('input[name="pricingTier"]:checked');
+
+                if (!contractAddress || !selectedOption) {
+                    alert('Please enter a contract address and select a pricing tier.');
+                    return;
+                }
+
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                fetch('/confirmation', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: `address=${encodeURIComponent(contractAddress)}&option=${encodeURIComponent(selectedOption.value)}`
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        alert('Payment record saved successfully!');
+                        closePopupBtn.click();
+                        // Refresh recent searches after successful submission
+                        fetchRecentSearches();
+
+                    })
+                    .catch(error => {
+                        console.error('Submission error:', error);
+                        alert('An error occurred while processing your request. Please try again.');
+                    });
+            });
+        });
+    </script>
+</body>
+
+</html>
