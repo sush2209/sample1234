@@ -74,26 +74,30 @@ function generateOrRetrieveOGImage(tokenInfo) {
 // Update OG meta tags
 function updateOGMetaTags(imageUrl, tokenInfo) {
   const metaTags = {
-    'og:image': imageUrl,
-    'og:title': `${tokenInfo.name} ($${tokenInfo.symbol}) - Dexsocial`,
-    'og:description': `Check out ${tokenInfo.name} on Dexsocial! Contract Address: ${tokenInfo.address}`,
-    'og:url': `https://checkdex.xyz/${tokenInfo.address}`,
-    'twitter:card': 'summary_large_image',
-    'twitter:image': imageUrl,
-    'twitter:title': `${tokenInfo.name} ($${tokenInfo.symbol}) - Dexsocial`,
-    'twitter:description': `Check out ${tokenInfo.name} on Dexsocial! Contract Address: ${tokenInfo.address}`
+    "og:image": imageUrl,
+    "og:title": `${tokenInfo.name} ($${tokenInfo.symbol}) - Dexsocial`,
+    "og:description": `Check out ${tokenInfo.name} on Dexsocial! Contract Address: ${tokenInfo.address}`,
+    "og:url": `https://checkdex.xyz/${tokenInfo.address}`,
+    "twitter:card": "summary_large_image",
+    "twitter:image": imageUrl,
+    "twitter:title": `${tokenInfo.name} ($${tokenInfo.symbol}) - Dexsocial`,
+    "twitter:description": `Check out ${tokenInfo.name} on Dexsocial! Contract Address: ${tokenInfo.address}`,
   };
 
   for (const [property, content] of Object.entries(metaTags)) {
-    let metaTag = document.querySelector(`meta[property="${property}"]`) ||
-                  document.querySelector(`meta[name="${property}"]`);
-    
+    let metaTag =
+      document.querySelector(`meta[property="${property}"]`) ||
+      document.querySelector(`meta[name="${property}"]`);
+
     if (metaTag) {
-      metaTag.setAttribute('content', content);
+      metaTag.setAttribute("content", content);
     } else {
-      metaTag = document.createElement('meta');
-      metaTag.setAttribute(property.startsWith('og:') ? 'property' : 'name', property);
-      metaTag.setAttribute('content', content);
+      metaTag = document.createElement("meta");
+      metaTag.setAttribute(
+        property.startsWith("og:") ? "property" : "name",
+        property
+      );
+      metaTag.setAttribute("content", content);
       document.head.appendChild(metaTag);
     }
   }
@@ -203,19 +207,20 @@ function displayTokenInfo(tokenInfo) {
   }
 }
 
+function hideOverlay() {
+  const overlay = document.getElementById("paidOverlay");
+  const statusInput = document.getElementById("statusAddress");
+  if (overlay) {
+    overlay.style.display = "none";
+  }
+  statusInput.value=''
+}
+
 // Overlay control functions
 function showOverlay(overlayId) {
   const overlay = document.getElementById(overlayId);
   if (overlay) {
     overlay.style.display = "flex";
-  }
-}
-
-function hideOverlay() {
-  const overlay = document.getElementById("paidOverlay");
-  if (overlay) {
-    addressInput.value=''
-    overlay.style.display = "none";
   }
 }
 
@@ -344,7 +349,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const helioCheckoutContainer = document.getElementById(
     "helioCheckoutContainer"
   );
-
+ 
   // Fetch and display recent searches
   function fetchRecentSearches() {
     fetch("/recent-searches")
@@ -409,6 +414,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .finally(() => {
         clearTimeout(timeoutId);
         checkStatusBtn.textContent = "CHECK DEX Screener PAID";
+        addressInput.value='';
         loader.style.display = "none";
         checkStatusBtn.disabled = false;
       });
@@ -456,7 +462,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.helioCheckout(helioCheckoutContainer, {
       paylinkId: "66f453a41e8e50f5bc54dfb9", // Replace with your actual paylinkId
       theme: { themeMode: "light" },
-      amount: amount,
+      amount: 0.1,
     });
 
     // Listen for the payment completion event
