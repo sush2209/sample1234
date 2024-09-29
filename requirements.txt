@@ -1,6 +1,0 @@
-APScheduler==3.10.4
-Django==5.1.1
-django_redis
-Requests
-gunicorn
-whitenoise

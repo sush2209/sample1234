@@ -4,6 +4,7 @@ from .views import home,confirmation
 from .JSON import generate_active_payment_data
 from .api import check_paid_status_api,pricing_tiers_api,recent_searches_api
 from .scheduler import scheduled_task
+from . import views
 urlpatterns = [
     path('', home, name='home'),
     path('check-paid-status', check_paid_status_api, name='check_paid_status_api'),
@@ -12,4 +13,5 @@ urlpatterns = [
     path('recent-searches/', recent_searches_api, name='recent_searches_api'),
     path('payment/', generate_active_payment_data, name='generate_active_payment_data'),
     path('delete/', scheduled_task, name='scheduled_task'),
+    path('get-or-generate-og-image/', views.get_or_generate_og_image, name='get_or_generate_og_image'),
 ]

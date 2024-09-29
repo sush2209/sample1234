@@ -267,7 +267,9 @@ body {
   font-weight: bold;
   text-transform: uppercase;
 }
-
+#loader{
+  color: black;
+}
 .search-button:hover {
   background-color: #45a049;
 }

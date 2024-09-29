@@ -1,4 +1,104 @@
 // Confetti function
+// Generate OG Image HTML
+function generateOGImageHTML(tokenInfo) {
+  return `
+    <html>
+    <head>
+      <style>
+        body {
+          margin: 0;
+          padding: 0;
+          width: 1200px;
+          height: 630px;
+          display: flex;
+          flex-direction: column;
+          font-family: Arial, sans-serif;
+          background-color: #1a1a1a;
+          color: white;
+        }
+        /* Add more styles here */
+      </style>
+    </head>
+    <body>
+      <div id="popupHeader">
+        <div id="popupTitle">Dexsocial</div>
+        <div id="socialIcons">
+          <img src="https://example.com/logo2.png" alt="Logo" class="X">
+          <img src="https://example.com/telegram-icon.png" alt="Telegram">
+        </div>
+      </div>
+      <div id="mainContent">
+        <div class="one logo-container">
+          <img src="${
+            tokenInfo.image_url ||
+            "https://ipfs.io/ipfs/QmdNyJh4k3pBiwT4WLZsxrFcjhdH9PTVFskxNRTLPGNYUL"
+          }" alt="${tokenInfo.name || "Token"} Logo" class="token-logo-popup">
+          <span class="paid-overlay">PAID!</span>
+        </div>
+        <div class="two">
+          <h1>${tokenInfo.name || "Token Name"}</h1>
+          <h2>$${tokenInfo.symbol || "Symbol"}</h2>
+          <p><strong>CA:</strong> ${tokenInfo.address || "CA"}</p>
+          <p>Dexscreener Token Enhancement</p>
+          <p>Paid for Symbol on Chain</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
+// Generate OG image
+function generateOrRetrieveOGImage(tokenInfo) {
+  const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+  return fetch("/get-or-generate-og-image/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrftoken,
+    },
+    body: JSON.stringify({ tokenInfo: tokenInfo }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.image_url) {
+        updateOGMetaTags(data.image_url, tokenInfo);
+      }
+      return data.image_url;
+    })
+    .catch((error) => {
+      console.error("Error getting or generating OG image:", error);
+    });
+}
+
+// Update OG meta tags
+function updateOGMetaTags(imageUrl, tokenInfo) {
+  const metaTags = {
+    'og:image': imageUrl,
+    'og:title': `${tokenInfo.name} ($${tokenInfo.symbol}) - Dexsocial`,
+    'og:description': `Check out ${tokenInfo.name} on Dexsocial! Contract Address: ${tokenInfo.address}`,
+    'og:url': `https://checkdex.xyz/${tokenInfo.address}`,
+    'twitter:card': 'summary_large_image',
+    'twitter:image': imageUrl,
+    'twitter:title': `${tokenInfo.name} ($${tokenInfo.symbol}) - Dexsocial`,
+    'twitter:description': `Check out ${tokenInfo.name} on Dexsocial! Contract Address: ${tokenInfo.address}`
+  };
+
+  for (const [property, content] of Object.entries(metaTags)) {
+    let metaTag = document.querySelector(`meta[property="${property}"]`) ||
+                  document.querySelector(`meta[name="${property}"]`);
+    
+    if (metaTag) {
+      metaTag.setAttribute('content', content);
+    } else {
+      metaTag = document.createElement('meta');
+      metaTag.setAttribute(property.startsWith('og:') ? 'property' : 'name', property);
+      metaTag.setAttribute('content', content);
+      document.head.appendChild(metaTag);
+    }
+  }
+}
+
 function launchConfetti() {
   var duration = 3 * 1000;
   var end = Date.now() + duration;
@@ -95,6 +195,8 @@ function displayTokenInfo(tokenInfo) {
 </div>
 
       `;
+
+      generateOrRetrieveOGImage(tokenInfo);
     } else {
       tokenInfoContent.innerHTML = "<p>No token information available.</p>";
     }
@@ -112,6 +214,7 @@ function showOverlay(overlayId) {
 function hideOverlay() {
   const overlay = document.getElementById("paidOverlay");
   if (overlay) {
+    addressInput.value=''
     overlay.style.display = "none";
   }
 }
@@ -257,7 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
           a.target = "_blank";
           a.style.textDecoration = "none";
           a.style.color = "#cccccc";
-          a.style.fontWeight = "500"
+          a.style.fontWeight = "500";
           a.onmouseover = function () {
             a.style.color = "#b3b3b3";
           };
@@ -266,7 +369,7 @@ document.addEventListener("DOMContentLoaded", () => {
           };
 
           li.appendChild(a);
-          li.style.cursor = "pointer"; 
+          li.style.cursor = "pointer";
           recentSearchesList.appendChild(li);
         });
       })

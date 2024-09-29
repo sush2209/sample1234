@@ -49,3 +49,41 @@ def confirmation(request):
         print(f"Error while saving payment record: {e}")
         return HttpResponse("An error occurred while processing the request.", status=500)
 
+from PIL import Image, ImageDraw, ImageFont
+import json
+
+
+def get_or_generate_og_image(request):
+    token_info = json.loads(request.body)['tokenInfo']
+    image_filename = f"og_image_{token_info['address']}.png"
+    image_path = os.path.join(settings.MEDIA_ROOT, 'og_images', image_filename)
+    
+    if os.path.exists(image_path):
+        # Image already exists, return its URL
+        return JsonResponse({'image_url': f"{settings.MEDIA_URL}og_images/{image_filename}"})
+    else:
+        # Generate new image
+        generate_og_image(token_info, image_path)
+        return JsonResponse({'image_url': f"{settings.MEDIA_URL}og_images/{image_filename}"})
+
+def generate_og_image(token_info, image_path):
+    # Create a blank image
+    img = Image.new('RGB', (1200, 630), color = (26, 26, 26))
+    d = ImageDraw.Draw(img)
+    
+    # Load a sample font (Arial is widely available)
+    font = ImageFont.truetype("arial.ttf", 36)
+    
+    # Add text to the image
+    d.text((50,50), "Dexsocial", font=font, fill=(255,255,255))
+    d.text((50,100), f"Token: {token_info['name']}", font=font, fill=(255,255,255))
+    d.text((50,150), f"Symbol: ${token_info['symbol']}", font=font, fill=(255,255,255))
+    d.text((50,200), f"Address: {token_info['address']}", font=font, fill=(255,255,255))
+    d.text((50,250), "Dexscreener Token Enhancement", font=font, fill=(255,255,255))
+    d.text((50,300), "Paid for Symbol on Chain", font=font, fill=(255,255,255))
+    
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(image_path), exist_ok=True)
+    
+    # Save the image
+    img.save(image_path)
