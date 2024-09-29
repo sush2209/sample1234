@@ -52,7 +52,6 @@ def confirmation(request):
 from PIL import Image, ImageDraw, ImageFont
 import json
 
-
 def get_or_generate_og_image(request):
     token_info = json.loads(request.body)['tokenInfo']
     image_filename = f"og_image_{token_info['address']}.png"

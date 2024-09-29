@@ -47,6 +47,14 @@ def check_payment_status(address):
         raise
 
 def fetch_and_save_token_info(address):
+    # Get the search history cache
+    search_cache = caches['search_history']
+    
+    # Check if the address is already in the cache
+    if not search_cache.get(address):
+        # If not in cache, add it
+        search_cache.set(address, True, timeout=None)  # Set timeout to None for indefinite storage
+    
     api_url = f"https://frontend-api.pump.fun/coins/{address}"
     try:
         response = requests.get(api_url)
