@@ -1,0 +1,7 @@
+APScheduler
+Django
+Requests
+django_redis
+gunicorn
+whitenoise
+pillow
