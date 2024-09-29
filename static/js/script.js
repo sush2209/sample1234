@@ -1,5 +1,7 @@
 // Confetti function
 // Generate OG Image HTML
+const BASE_URL = "https://sushantshelake.work.gd/";
+
 function generateOGImageHTML(tokenInfo) {
   return `
     <html>
@@ -50,6 +52,7 @@ function generateOGImageHTML(tokenInfo) {
 
 // Generate OG image
 function generateOrRetrieveOGImage(tokenInfo) {
+  console.log("Generating or retrieving OG image for", tokenInfo);
   const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
   return fetch("/get-or-generate-og-image/", {
     method: "POST",
@@ -73,11 +76,12 @@ function generateOrRetrieveOGImage(tokenInfo) {
 
 // Update OG meta tags
 function updateOGMetaTags(imageUrl, tokenInfo) {
+  console.log("Updating OG meta tags", imageUrl, tokenInfo);
   const metaTags = {
     "og:image": imageUrl,
     "og:title": `${tokenInfo.name} ($${tokenInfo.symbol}) - Dexsocial`,
     "og:description": `Check out ${tokenInfo.name} on Dexsocial! Contract Address: ${tokenInfo.address}`,
-    "og:url": `https://checkdex.xyz/${tokenInfo.address}`,
+    "og:url": `${BASE_URL}${tokenInfo.address}`,
     "twitter:card": "summary_large_image",
     "twitter:image": imageUrl,
     "twitter:title": `${tokenInfo.name} ($${tokenInfo.symbol}) - Dexsocial`,
@@ -104,7 +108,7 @@ function updateOGMetaTags(imageUrl, tokenInfo) {
 }
 
 function launchConfetti() {
-  var duration = 3 * 1000;
+  var duration = 2 * 1000;
   var end = Date.now() + duration;
   (function frame() {
     confetti({
@@ -213,6 +217,7 @@ function hideOverlay() {
   if (overlay) {
     overlay.style.display = "none";
   }
+  confetti.reset();
   statusInput.value=''
 }
 
@@ -230,8 +235,7 @@ function showPaidOverlay() {
 }
 
 function shareToX(contractAddress) {
-  const baseUrl = "https://checkdex.xyz/";
-  const fullUrl = baseUrl + contractAddress;
+  const fullUrl = BASE_URL + contractAddress;
   const message = encodeURIComponent(
     `Dex is paid! Confirmed by #CheckDEX\n${fullUrl}`
   );
@@ -462,7 +466,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.helioCheckout(helioCheckoutContainer, {
       paylinkId: "66f453a41e8e50f5bc54dfb9", // Replace with your actual paylinkId
       theme: { themeMode: "light" },
-      amount: amount,
+      amount: 0.1,
     });
 
     // Listen for the payment completion event
