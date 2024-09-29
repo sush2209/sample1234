@@ -462,7 +462,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.helioCheckout(helioCheckoutContainer, {
       paylinkId: "66f453a41e8e50f5bc54dfb9", // Replace with your actual paylinkId
       theme: { themeMode: "light" },
-      amount: '0.1',
+      amount: amount,
     });
 
     // Listen for the payment completion event
