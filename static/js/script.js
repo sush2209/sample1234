@@ -1,6 +1,4 @@
-// Confetti function
-// Generate OG Image HTML
-const BASE_URL = "https://sushantshelake.work.gd/";
+var BASE_URL = "https://sushantshelake.work.gd/";
 
 function generateOGImageHTML(tokenInfo) {
   return `
@@ -89,27 +87,22 @@ function updateOGMetaTags(imageUrl, tokenInfo) {
   };
 
   for (const [property, content] of Object.entries(metaTags)) {
-    let metaTag = document.querySelector(`meta[property="${property}"]`) ||
-                  document.querySelector(`meta[name="${property}"]`);
+    let metaTag =
+      document.querySelector(`meta[property="${property}"]`) ||
+      document.querySelector(`meta[name="${property}"]`);
 
-    if (!metaTag) {
+    if (metaTag) {
+      metaTag.setAttribute("content", content);
+    } else {
       metaTag = document.createElement("meta");
-      metaTag.setAttribute(property.startsWith("og:") ? "property" : "name", property);
+      metaTag.setAttribute(
+        property.startsWith("og:") ? "property" : "name",
+        property
+      );
+      metaTag.setAttribute("content", content);
       document.head.appendChild(metaTag);
     }
-
-    metaTag.setAttribute("content", content);
   }
-
-  // Ensure the base URL is set
-  let baseTag = document.querySelector("base");
-  if (!baseTag) {
-    baseTag = document.createElement("base");
-    document.head.insertBefore(baseTag, document.head.firstChild);
-  }
-  baseTag.href = BASE_URL;
-
-  console.log("Meta tags updated successfully");
 }
 
 function launchConfetti() {
