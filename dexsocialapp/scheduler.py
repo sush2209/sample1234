@@ -90,7 +90,7 @@ def start_scheduler():
     scheduler = BackgroundScheduler()
 
     # Schedule the first task every 5 minutes
-    scheduler.add_job(scheduled_task, 'interval', minutes=5)
+    scheduler.add_job(scheduled_task, 'interval', minutes=15)
 
     # Schedule the second task every 4 minutes
     scheduler.add_job(generate_active_payment_data, 'interval', minutes=1)
