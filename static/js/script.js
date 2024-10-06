@@ -1,4 +1,4 @@
-var BASE_URL = "https://sushantshelake.work.gd/";
+var BASE_URL = "https://sushantshelake.work.gd";
 
 function generateOGImageHTML(tokenInfo) {
   return `
@@ -216,7 +216,7 @@ function hideOverlay() {
     overlay.style.display = "none";
   }
   confetti.reset();
-  statusInput.value=''
+  statusInput.value = "";
 }
 
 // Overlay control functions
@@ -233,7 +233,7 @@ function showPaidOverlay() {
 }
 
 function shareToX(contractAddress) {
-  const fullUrl = BASE_URL + contractAddress;
+  const fullUrl = BASE_URL +"?token="+contractAddress;
   const message = encodeURIComponent(
     `Dex is paid! Confirmed by #CheckDEX\n${fullUrl}`
   );
@@ -271,7 +271,6 @@ function checkPaidStatus(address, checkEligibility = false) {
           showPaidOverlay();
         }
 
-        // Check if token_info exists and display it if available
         if (data.token_info) {
           displayTokenInfo(data.token_info);
         } else {
@@ -330,10 +329,13 @@ function fetchPricingTiers() {
     });
 }
 
-// Main functionality
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM fully loaded");
-
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get("token");
+  if (token) {
+    checkPaidStatus(token)
+  } 
   const overlay = document.getElementById("overlay");
   const eligibilityPopup = document.getElementById("eligibilityPopup");
   const checkStatusBtn = document.getElementById("checkStatusBtn");
@@ -351,7 +353,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const helioCheckoutContainer = document.getElementById(
     "helioCheckoutContainer"
   );
- 
+
   // Fetch and display recent searches
   function fetchRecentSearches() {
     fetch("/recent-searches")
@@ -416,7 +418,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .finally(() => {
         clearTimeout(timeoutId);
         checkStatusBtn.textContent = "CHECK DEX Screener PAID";
-        addressInput.value='';
+        addressInput.value = "";
         loader.style.display = "none";
         checkStatusBtn.disabled = false;
       });
@@ -511,9 +513,4 @@ document.addEventListener("DOMContentLoaded", () => {
   script.type = "module";
   script.crossOrigin = "anonymous";
   document.body.appendChild(script);
-});
-
-document.getElementById("getTrending").addEventListener("click", () => {
-  const paymentPopup = document.getElementById("eligibilityPopup");
-  paymentPopup.style.display = "block";
 });
