@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta Information -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Check - Eligibility and Status</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/overlay.css' %}">
+    <link rel="stylesheet" href="{% static 'css/popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+
+    <!-- Font Import -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+    </style>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+
+    <!-- Open Graph Metadata -->
+    <meta property="og:image"
+        content="https://sushantshelake.work.gd/media/og_images/og_image_5jXAHxKjvyXNDEMQ7cQjJAifqwFHNXR5E6FpoTvp64dz.png">
+    <meta property="og:title" content="Pengu ($Pengu) - Dexsocial">
+    <meta property="og:description"
+        content="Check out Pengu on Dexsocial! Contract Address: 5jXAHxKjvyXNDEMQ7cQjJAifqwFHNXR5E6FpoTvp64dz">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://sushantshelake.work.gd/media/og_images/og_image_5jXAHxKjvyXNDEMQ7cQjJAifqwFHNXR5E6FpoTvp64dz.png">
+    <meta name="twitter:title" content="Pengu ($Pengu) - Dexsocial">
+    <meta name="twitter:description"
+        content="Check out Pengu on Dexsocial! Contract Address: 5jXAHxKjvyXNDEMQ7cQjJAifqwFHNXR5E6FpoTvp64dz">
+</head>
+
+<body>
+    <div class="container text-center">
+        <div class="header-text mt-5">DEXSTATUS.COM</div>
+        <div class="search-count mt-3 mb-5" style="font-size: 1.5rem;">SEARCHES SO FAR: <span
+                style="color: #F0B90B;">{{visit_count}}</span> <i class="bi bi-rocket"></i></div>
+        <div class="search-container">
+            <div class="search-box">
+                {% csrf_token %}
+                <input type="text" class="search-bar" id="statusAddress"
+                    placeholder="Solana, Tron, Eth, Base, Polygon, BSC, or Blast address">
+                <button class="search-button" id="checkStatusBtn">
+                    CHECK DEX Screener PAID
+                    <div class="button-loader" id="loader"></div>
+                </button>
+            </div>
+        </div>
+        <div id="statusResult"></div>
+    </div>
+
+    <div class="main-container">
+        <div class="left-container trending-container">
+            <h2>Trending Tokens</h2>
+            <div class="container-wrapper">
+                {% for item in trending_data %}
+                <div class="token-item">
+                    <div class="token-header">
+                        <div class="token-image">
+                            <img src="{{ item.image_uri|default:'path/to/placeholder-image.jpg' }}"
+                                alt="{{ item.name }}" class="token-logo" />
+                        </div>
+                        <div class="token-info">
+                            <div class="token-name-symbol">
+                                <span class="token-symbol">${{ item.symbol }}</span>
+                                <span class="token-full-name">{{ item.name|truncatechars:15|upper }}</span>
+                            </div>
+                            <div class="token-address-social">
+                                <div class="token-address">
+                                    {{ item.mint|slice:":4"|upper }}...{{ item.mint|slice:"-4:"|upper }}
+                                    <span class="copy-icon" onclick="copyToClipboard('{{ item.mint }}')">
+                                        <i class="fas fa-copy"></i>
+                                    </span>
+                                </div>
+                                <div class="social-links">
+                                    <a href="{{ item.telegram }}"
+                                        class="social-icon {% if item.telegram %}active{% endif %}" target="_blank">
+                                        <i class="fab fa-telegram-plane"></i>
+                                    </a>
+                                    <a href="{{ item.twitter }}"
+                                        class="social-icon {% if item.twitter %}active{% endif %}" target="_blank">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                    <a href="{{ item.website }}"
+                                        class="social-icon {% if item.website %}active{% endif %}" target="_blank">
+                                        <i class="fas fa-globe"></i>
+                                    </a>
+                                    <a href="https://pump.fun/{{item.mint}}" class="social-icon active" target="_blank">
+                                        <img src="{% static 'images/pumplogo.jpg' %}" alt="Logo" class="pumplogo">
+                                    </a>
+                                    <a href="#" title="Dex is Paid" class="social-icon active">
+                                        <img src="{% static 'images/dexscreener.png' %}" alt="Logo" class="pumplogo">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="token-footer">
+                        <div class="market-cap">
+                            <span class="mc-label">MC: </span>
+                            <span class="mc-value">{{ item.market_cap|default:"N/A" }}</span>
+                        </div>
+                        <button class="buy-now-button">Buy Now</button>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No token data available at the moment.</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="right-container">
+            <div class="trending-container">
+                <h2>Recent Searches</h2>
+                <ul id="recentSearchesList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast hidden">Address copied to clipboard!</div>
+
+    <div id="paidOverlay" class="overlay" style="display: none;">
+        <div id="tokenInfoContent"></div>
+    </div>
+    </div>
+    <div id="overlay"></div>
+    <div id="eligibilityPopup">
+        <div class="popup-content">
+            <h2>Get Trending</h2>
+            <form id="eligibilityForm">
+                <input type="text" id="address" name="addressInput" placeholder="Enter contract address" required>
+                <button type="button" id="checkEligibilityBtn">Check Eligibility</button>
+                <div id="eligibilityMessage"></div>
+                <div id="paymentOptions" class="mt-3">
+                    <div id="radioContainer"></div>
+                    <button type="submit" id="connectWalletBtn" style="display: none;">Connect Wallet</button>
+                </div>
+                <div id="helioCheckoutContainer"></div>
+                <div class="mt-3 center d-flex">
+                    <button type="button" id="closePopupBtn">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <center>
+        <button id="getTrending" class="my-5 mt-4">
+            Get Trending Today
+        </button>
+    </center>
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+</html>

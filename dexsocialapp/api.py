@@ -45,9 +45,8 @@ def check_payment_status(address):
         return dex_data[0].get('status') == 'approved' if isinstance(dex_data, list) and dex_data else False
     except requests.RequestException as e:
         raise
-
+ 
 def fetch_and_save_token_info(address):
-    # Get the search history cache
     search_cache = caches['search_history']
     
     # Check if the address is already in the cache

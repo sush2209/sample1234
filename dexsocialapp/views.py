@@ -6,8 +6,13 @@ from django.utils import timezone
 import requests, json, os
 from django.conf import settings
 from PIL import Image, ImageDraw, ImageFont
-
+from django.core.cache import cache
+import random
 JSON_FILE_PATH = 'active_payment_data.json'
+
+def increment_visit_count():
+    visit_count = cache.get('visit_count')
+    cache.set('visit_count', visit_count + 1, timeout=None)  
 
 def load_active_payment_data():
     if os.path.exists(JSON_FILE_PATH):
@@ -22,8 +27,11 @@ def load_active_payment_data():
 
 def home(request):
     active_data = load_active_payment_data()
+    increment_visit_count()
+    visit_count = cache.get('visit_count')
     return render(request, 'index.html', {
         'trending_data': active_data,
+        'visit_count':visit_count
     })
 
 @require_http_methods(["POST"])
